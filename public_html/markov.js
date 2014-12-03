@@ -75,7 +75,7 @@ function getWordId(word)
     {
         wordMap[word] = nextWordId++;
         idMap[wordMap[word]] = word;
-        console.log(word + "->" + wordMap[word]);
+        //console.log(word + "->" + wordMap[word]);
     }
 
     return wordMap[word];
@@ -155,7 +155,7 @@ function wordSequence(seq)
 
 function addEntry(prefix, word)
 {
-    console.log(prefix.join(",") + "->" + word);
+    //console.log(prefix.join(",") + "->" + word);
     trie.addSequence(prefix, word);
 }
 
