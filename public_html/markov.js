@@ -115,6 +115,15 @@ TrieNode = Class.extend({
             this.next[word].print(seq);
             seq.pop();
         }
+    },
+    //returns null if the prefix is not in the trie
+    getSuffix: function(prefix)
+    {
+        if(prefix.length === 0) return this.end;
+        
+        if(!(prefix[0] in this.next)) return null;
+        
+        return this.next[prefix[0]].getSuffix(prefix.slice(1));
     }
 });
 
@@ -157,4 +166,38 @@ function getPrefix(arr, idx, len)
         return arr.slice(0, idx);
     }
     return arr.slice(idx-len, idx);
+}
+
+function build(prefixLen)
+{
+    var str = "";
+    var prefix = [];
+    
+    while(true)
+    {
+        var next = trie.getSuffix(prefix);
+        if(next === null || next.length === 0) break;
+        
+        var nextWordId = next[Math.floor(Math.random()*next.length)];
+        
+        if(prefix.length === prefixLen )
+        {
+            //no leading space
+            if(str.length !== 0) str += " ";
+            
+            str += idMap[prefix.shift()];
+        }
+        
+        prefix.push(nextWordId);
+    }
+    
+    while(prefix.length > 0)
+    {
+        //no leading space
+        if(str.length !== 0) str += " ";
+
+        str += idMap[prefix.shift()];
+    }
+    
+    return str;
 }
