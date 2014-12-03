@@ -233,6 +233,7 @@ function readInput()
     //cannot be cumulative if the prefix length has changed
     if(prevPrefixLen !== null && prevPrefixLen !== prefixLen)
     {
+        alert("Prefix length changed, previous input samples discarded.");
         trie = new TrieNode();
     }
     prevPrefixLen = prefixLen;
