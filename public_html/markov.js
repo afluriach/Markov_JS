@@ -66,6 +66,8 @@ var wordMap = {};
 //and each ID back to word
 var idMap = {}
 var nextWordId = 1;
+var prevPrefixLen = null;
+var hasReadInput = false;
 
 function getWordId(word)
 {
@@ -140,6 +142,17 @@ function idSequence(seq)
     return result;
 }
 
+//convert a sequence of IDs to words
+function wordSequence(seq)
+{
+    var result = [];
+    for(var i=0;i<seq.length; ++i)
+    {
+        result.push(idMap[seq[i]]);
+    }
+    return result;
+}
+
 function addEntry(prefix, word)
 {
     console.log(prefix.join(",") + "->" + word);
@@ -168,13 +181,15 @@ function getPrefix(arr, idx, len)
     return arr.slice(idx-len, idx);
 }
 
-function build(prefixLen)
+function build(prefixLen, maxLen)
 {
-    var str = "";
+    var outputSequence = [];
     var prefix = [];
     
     while(true)
     {
+        if(outputSequence.length >= maxLen) break;
+        
         var next = trie.getSuffix(prefix);
         if(next === null || next.length === 0) break;
         
@@ -182,22 +197,71 @@ function build(prefixLen)
         
         if(prefix.length === prefixLen )
         {
-            //no leading space
-            if(str.length !== 0) str += " ";
-            
-            str += idMap[prefix.shift()];
+            outputSequence.push(prefix.shift());
         }
         
         prefix.push(nextWordId);
     }
     
-    while(prefix.length > 0)
+    //push remaining prefix buffer into the output sequence
+    while(prefix.length > 0 && outputSequence.length < maxLen)
     {
-        //no leading space
-        if(str.length !== 0) str += " ";
-
-        str += idMap[prefix.shift()];
+        outputSequence.push(prefix.shift());
     }
     
-    return str;
+    return wordSequence(outputSequence).join(" ");
+}
+
+//cumulative, i.e. do not clear previous input data
+function readInput()
+{
+    var input = document.getElementById('input').value;
+    var lines = input.split("\n");
+    var prefixLen = parseInt(document.getElementById('prefix_len').value);
+    
+    if(isNaN(prefixLen))
+    {
+        alert("Prefix length must be an integer!");
+        return;
+    }
+    else if(prefixLen <= 0)
+    {
+        alert("Prefix length must be greater than 0!");
+        return;
+    }
+    
+    //cannot be cumulative if the prefix length has changed
+    if(prevPrefixLen !== null && prevPrefixLen !== prefixLen)
+    {
+        trie = new TrieNode();
+    }
+    prevPrefixLen = prefixLen;
+    
+    for(var i=0;i<lines.length; ++i)
+    {
+        parseSample(lines[i], prefixLen);
+    }
+    hasReadInput = true;
+}
+
+function outputSample()
+{
+    if(!hasReadInput)
+    {
+        alert("Must give an input sample first!");
+        return;
+    }
+    var maxLen = parseInt(document.getElementById('max_len').value);
+    if(isNaN(maxLen))
+    {
+        alert("Max length must be an integer!");
+        return;
+    }
+    else if(maxLen <= 0)
+    {
+        alert("Max length must be greater than 0!");
+        return;
+    }
+    
+    document.getElementById('output').value = build(prevPrefixLen, maxLen);
 }
