@@ -119,13 +119,14 @@ TrieNode = Class.extend({
         }
     },
     //returns null if the prefix is not in the trie
-    getSuffix: function(prefix)
+    //pass along index instead of successively slicing/popping array
+    getSuffix: function(prefix, idx)
     {
-        if(prefix.length === 0) return this.end;
+        if(prefix.length === idx) return this.end;
         
-        if(!(prefix[0] in this.next)) return null;
+        if(!(prefix[idx] in this.next)) return null;
         
-        return this.next[prefix[0]].getSuffix(prefix.slice(1));
+        return this.next[prefix[idx]].getSuffix(prefix, idx+1);
     }
 });
 
@@ -190,7 +191,7 @@ function build(prefixLen, maxLen)
     {
         if(outputSequence.length >= maxLen) break;
         
-        var next = trie.getSuffix(prefix);
+        var next = trie.getSuffix(prefix, 0);
         if(next === null || next.length === 0) break;
         
         var nextWordId = next[Math.floor(Math.random()*next.length)];
