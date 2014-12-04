@@ -100,9 +100,10 @@ function addEntry(prefix, word)
     trie.addSequence(prefix, word);
 }
 
-function parseSample(str, prefixLen)
+//parse a line of input text and add it to the model
+function parseSample(inputSample, prefixLen)
 {
-    var arrWords = str.split(" ");
+    var arrWords = inputSample.split(" ");
     var arrIds = idSequence(arrWords);
     
     for(var i=0;i<arrIds.length; ++i)
