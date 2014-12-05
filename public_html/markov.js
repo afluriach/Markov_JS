@@ -48,7 +48,7 @@ function buildLetterSet()
         
         for(var ch = start; ch <= end; ++ch)
         {
-            result[String.fromCharCode(ch)] = true;
+            result[ch] = true;
         }
     }
     return result;
@@ -64,8 +64,8 @@ function wordLength(str, pos)
         //check for apostrophe in the word. the character must be a letter and
         //check for end of string
         if((str[i] === "'" || str[i] === closeSingleQuote) &&
-           i < str.length-1 && (str[i+1] in letterSet)) continue;
-        else if(!(str[i] in letterSet)) break;
+           i < str.length-1 && (str.charCodeAt(i+1) in letterSet)) continue;
+        else if(!(str.charCodeAt(i) in letterSet)) break;
     }
     return len;
 }
