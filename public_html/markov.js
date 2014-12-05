@@ -17,11 +17,13 @@ var closeDoubleQuote = "”";
 var openingPunctuation =
 {
     '(' : true,
+    '[' : true,
 }
 
 var closingPunctuation =
 {
     ')' : true,
+    ']' : true,
     ',' : true,
     ';' : true,
     ':' : true,
