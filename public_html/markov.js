@@ -65,6 +65,9 @@ function wordLength(str, pos)
         //check for end of string
         if((str[i] === "'" || str[i] === closeSingleQuote) &&
            i < str.length-1 && (str.charCodeAt(i+1) in letterSet)) continue;
+        //similarly, check for compound words. hyphens must not be consecutive
+        if(str[i] === "-" &&
+           i < str.length-1 && (str.charCodeAt(i+1) in letterSet)) continue;
         else if(!(str.charCodeAt(i) in letterSet)) break;
     }
     return len;
