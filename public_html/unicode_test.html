@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<!--
+Electric Sun Studio Copyright (c) 2014
+-->
+<html>
+    <head>
+        <title>Markov JS</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        <script src="markov.js"></script>
+    </head>
+    <body>
+        <textarea id="input" rows="12" cols="40">Input samples go here, one per line.</textarea>
+        <br>
+        Prefix length: <input id="prefix_len" type="number" value="2">
+        Max output length (words): <input id="max_len" type="number" value="500"> <br>
+        <button id="read_input" onclick="readInput()">Read input</button>
+        <button id="generate_output" onclick="outputSample()">Generate output sample</button>
+        <br>
+        <textarea id="output" rows="12" cols="40">Output.</textarea>
+        
+    </body>
+</html>
