@@ -12,7 +12,8 @@ var openSingleQuote  = "‘";
 var closeSingleQuote = "’";
 var openDoubleQuote = "“";
 var closeDoubleQuote = "”";
-
+var emDash = '—';
+var enDash = '–';
 
 var openingPunctuation =
 {
@@ -165,10 +166,16 @@ function addEntry(prefix, word)
     trie.addSequence(prefix, word);
 }
 
-function isDash(str, idx)
+function dashLength(str, idx)
 {
-    if(idx + 2 > str.length) return false;
-    return (str[idx]==='-' && str[idx+1]==='-');
+    var count = 0;
+    for(var i=idx; i < str.length; ++i, ++count)
+    {
+        if(str[idx] !== '-') break;
+    }
+    
+    if(count >= 2) return count;
+    else return 0;
 }
 
 function tokenizeWord(word)
@@ -203,10 +210,16 @@ function tokenizeWord(word)
     //check for dashes and determine word bounaries
     while(idx < word.length)
     {
-        if(isDash(word, idx))
+        var dash = dashLength(word, idx);
+        if(dash > 0)
         {
-            tokens.push("--");
-            idx += 2;
+            tokens.push(emDash);
+            idx += dash;
+        }
+        else if(word[idx] === emDash || word[idx] === enDash)
+        {
+            tokens.push(emDash);
+            ++idx;
         }
         else
         {
@@ -323,7 +336,7 @@ var SpacingClass = {
 
 function getSpacingClass(token)
 {
-    if(token === "--") return SpacingClass.dash;
+    if(token === emDash) return SpacingClass.dash;
     else if(token in openingPunctuation || token === openSingleQuote || token===openDoubleQuote) return SpacingClass.opening;
     else if(token in closingPunctuation || token === closeSingleQuote || token===closeDoubleQuote) return SpacingClass.closing;
     else return SpacingClass.word;
