@@ -260,8 +260,7 @@ function tokenizeWord(word)
     return tokens;
 }
 
-//parse a line of input text and add it to the model
-function parseSample(inputSample, prefixLen)
+function parseTokens(inputSample)
 {
     var spaceSeparatedTokens = inputSample.split(" ");
     var tokens = [];
@@ -270,8 +269,13 @@ function parseSample(inputSample, prefixLen)
     {
         tokens = tokens.concat(tokenizeWord(spaceSeparatedTokens[i]));
     }
-    
-    var tokenIds = idSequence(tokens);
+    return tokens;
+}
+
+//parse a line of input text and add it to the model
+function parseSampleAndAddToModel(inputSample, prefixLen)
+{
+    var tokenIds = idSequence(parseTokens(inputSample));
     
     for(var i=0;i<tokenIds.length; ++i)
     {
@@ -412,7 +416,7 @@ function readInput()
     
     for(var i=0;i<lines.length; ++i)
     {
-        parseSample(lines[i], prefixLen);
+        parseSampleAndAddToModel(lines[i], prefixLen);
     }
     hasReadInput = true;
 }
